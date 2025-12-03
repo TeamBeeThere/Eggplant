@@ -6,7 +6,7 @@ import Token from './vues/Token.vue';
 <template>
   <div className="body">
   <div className="header">
-  <h1>BeeSquare</h1>
+  <h1>Eggpl🍆nt</h1>
   <p>
     Employee Management Tool
   </p>
@@ -36,11 +36,11 @@ import Token from './vues/Token.vue';
 .header {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  color: #2c3e50;
+  color: var(--purple);
   background-color: var(--green);
 }
 .mainContent {
-  background-color: var(--purple);
+  background-image: url("@/assets/image.png");
   height:100%;
   display: flex;
   flex-direction: row;
@@ -50,24 +50,28 @@ import Token from './vues/Token.vue';
 padding: 1rem;
 width: 100%;
 }
+.rightBox {
+padding: 1rem;
+width: 100%;
+}
 </style>
 <style>
 :root {
   --green: #349948;
   --greenlite: #c2e0c8;
-  --purple: #993485;
+  --purple: #43217e;
   --purplelite: #ebd6e7;
   --blue: #345299;
   --orange: #997a34;
 }
 html {
   height: 100%;
-  background-color: var(--green);
+  background-image: url("/assets/image.png");
 }
 body{
   margin:0;
   height:100%;
-  background-color: var(--purple);
+  background-image: url("/assets/image.png");
 }
 #app{
   height:100%;
