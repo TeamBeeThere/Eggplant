@@ -27,4 +27,11 @@ public class UsersService {
     }
 
     // Business logic methods would go here, focusing on User and Login operations...
+    // TODO: Register New Employee
+
+    // TODO: Authenticate User
+
+    // TODO: Update User Details
+
+    // TODO: Delete Employee
 }
