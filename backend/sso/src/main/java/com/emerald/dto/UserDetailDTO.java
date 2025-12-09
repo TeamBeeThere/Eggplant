@@ -8,7 +8,7 @@ public class UserDetailDTO {
         private String title;
         private String location;
 
-    UserDetailDTO(
+    public UserDetailDTO(
         String userName,
         String firstName,
         String lastName, 

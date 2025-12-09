@@ -9,12 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.emerald.dto.EmployeeDTO;
 import com.emerald.dto.LoginDTO;
 import com.emerald.dto.UserDTO;
+import com.emerald.dto.UserDetailDTO;
 import com.emerald.model.Employee;
 import com.emerald.model.Login;
 import com.emerald.model.Users;
+import com.emerald.model.Location;
+import com.emerald.model.Departments;
 import com.emerald.repository.EmployeeRepository;
 import com.emerald.repository.LoginRepository;
 import com.emerald.repository.UsersRepository;
+import com.emerald.repository.LocationRepository;
+import com.emerald.repository.DepartmentRepository;
 import com.emerald.util.UserUtils;
 
 @Service
@@ -24,19 +29,28 @@ public class UsersService {
     private final EmployeeRepository employeeRepository;
     private final UsersRepository userRepository;
     private final LoginRepository loginRepository;
+    private final LocationRepository locationRepository;
+    private final DepartmentRepository departmentRepository;
 
     // --- Constructor Injection ---
     /**
      * Constructor used by Spring to inject the required repository dependencies.
      */
-    public UsersService(EmployeeRepository employeeRepository, UsersRepository userRepository, LoginRepository loginRepository) {
+    public UsersService(
+        EmployeeRepository employeeRepository,
+        UsersRepository userRepository, 
+        LoginRepository loginRepository,
+        LocationRepository locationRepository,
+        DepartmentRepository departmentRepository
+    ) {
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
         this.loginRepository = loginRepository;
+        this.locationRepository = locationRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     // Business logic methods would go here, focusing on User and Login operations...
-    // TODO: Register New Employee
     public Users registerUser(EmployeeDTO request) {
         // Create new employee
         Employee employee = new Employee(
@@ -64,10 +78,7 @@ public class UsersService {
         return user;
     }
 
-    // TODO: Authenticate User
     public Users authenticateUser(UserDTO passedUser, LoginDTO rawPassword) throws SecurityException {
-        
-
         // 1. Find the User by ID
         Users user = userRepository.findByUserName(passedUser.getUserName())
             .orElseThrow(() -> new SecurityException("Authentication failed: Invalid credentials."));
@@ -85,7 +96,28 @@ public class UsersService {
         }
     }
 
-    // TODO: Update User Details
+    public UserDetailDTO viewUserDetails(String userName) {
+        Users user = userRepository.findByUserName(userName)
+            .orElseThrow(() -> new NoSuchElementException("User not found with username: " + userName));
+        
+        Employee employee = employeeRepository.findByUserId(user.getId())
+            .orElseThrow(() -> new NoSuchElementException("Employee not found with user id: " + user.getId()));
+        
+        Departments department = departmentRepository.findById(employee.getDepartment())
+            .orElseThrow(() -> new NoSuchElementException("Department not found"));
+        Location location = locationRepository.findById(employee.getLocation())
+            .orElseThrow(() -> new NoSuchElementException("Location not found"));
+
+        return new UserDetailDTO(
+            user.getUserName(),
+            employee.getFirstName(),
+            employee.getLastName(),
+            department.getName(),
+            employee.getTitle(),
+            location.getCountry()
+        );
+    }
+
     @Transactional
     public Users updateUserDetails(UserDTO updatedUser) {
         
@@ -98,7 +130,6 @@ public class UsersService {
         return userRepository.save(existingUser);
     }
 
-    // TODO: Delete Employee
     @Transactional
     public void deleteEmployee(int id) {
         
