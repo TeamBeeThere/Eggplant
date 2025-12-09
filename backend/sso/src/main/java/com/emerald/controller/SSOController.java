@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emerald.dto.EmployeeDTO;
+import com.emerald.dto.UserDTO;
 import com.emerald.service.EmployeeService;
 import com.emerald.service.UsersService;
 
@@ -83,28 +85,20 @@ public class SSOController {
                              .body("{\"message\": \"Account created.\"}");
     }
 
-    @DeleteMapping("/deleteaccount" /* "/deleteaccount/{id}" */)
-    public ResponseEntity<String> deleteAccount( /* @RequestBody User user, @PathVariable Long id */){
+    @DeleteMapping("/deleteaccount")
+    public ResponseEntity<String> deleteAccount(@PathVariable int id){
 
-        /*
-        userRepo.deleteById(id)
-        */
+        usersService.deleteEmployee(id);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body("{\"message\": \"Account deleted\"}");
     }
 
-    @PutMapping("/changepassword" /* "/changepassword/{id}" */)
-    public ResponseEntity<String> changePassword(/* @RequestBody User updatedUser */){
+    @PutMapping("/changepassword")
+    public ResponseEntity<String> changePassword(@RequestBody UserDTO updatedUser){
 
-        /*
-        userRepo.findById(id).map(user -> { 
-            user.setName(updatedUser.getName());
-            user.setPassword(updatedUser.getRole());
-            return userRepo.save(employee)
-         })
-        */
+        usersService.updateUserDetails(updatedUser);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
