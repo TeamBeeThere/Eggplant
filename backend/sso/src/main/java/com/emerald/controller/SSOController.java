@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.emerald.dto.EmployeeDTO;
+import com.emerald.service.EmployeeService;
+import com.emerald.service.UsersService;
 
 /**
  *
@@ -23,15 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sso")
 public class SSOController {
 
-    /* 
-        private final UserRepository userRepo;
-        private final EmployeeRepository empRepo
+        private final UsersService usersService;
+        private final EmployeeService employeeService;
 
-        SSOController(UserRepository userRepository, EmployeeRepository empRepository){
-            this.userRepo = userRepository;
-            this.empRepo = empRepository
+        SSOController(UsersService usersService, EmployeeService employeeService){
+            this.usersService = usersService;
+            this.employeeService = employeeService;
         }
-    */
     
     @GetMapping(("/hello"))
     public ResponseEntity<String> greetings(){
@@ -71,9 +74,9 @@ public class SSOController {
     }
 
     @PostMapping("/createaccount")
-    public ResponseEntity<String> createAccount( /* @RequestBody User newUser */){
+    public ResponseEntity<String> createAccount(@RequestBody EmployeeDTO newUser){
 
-        //userRepo.save(newUser)
+        usersService.registerUser(newUser);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
