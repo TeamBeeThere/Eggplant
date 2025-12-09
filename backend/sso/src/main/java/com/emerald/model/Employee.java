@@ -26,6 +26,22 @@ public class Employee {
     }
 
     public Employee(
+        String firstName,
+        String lastName,
+        String title,
+        int department,
+        String email,
+        int location
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.title = title;
+        this.department = department;
+        this.email = email;
+        this.location = location;
+    }
+
+    public Employee(
         int userId,
         String firstName,
         String lastName,

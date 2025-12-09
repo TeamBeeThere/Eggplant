@@ -11,6 +11,22 @@ public class EmployeeDTO {
     private int locationId;
 
     public EmployeeDTO(
+        String firstName,
+        String lastName, 
+        int department,
+        String title,
+        String email,
+        int locationId
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.department = department;
+        this.title = title;
+        this.email = email;
+        this.locationId = locationId;
+    }
+
+    public EmployeeDTO(
         int id,
         int userId,
         String firstName,

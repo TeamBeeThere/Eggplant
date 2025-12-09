@@ -6,16 +6,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.emerald.dto.EmployeeDTO;
+import com.emerald.dto.LoginDTO;
+import com.emerald.dto.UserDTO;
+import com.emerald.model.Employee;
+import com.emerald.model.Login;
+import com.emerald.model.Users;
 import com.emerald.repository.EmployeeRepository;
 import com.emerald.repository.LoginRepository;
 import com.emerald.repository.UsersRepository;
-import com.emerald.model.Users;
-import com.emerald.model.Login;
-import com.emerald.model.Employee;
-
-import com.emerald.dto.UserDTO;
-import com.emerald.dto.EmployeeDTO;
-import com.emerald.dto.LoginDTO;
 
 @Service
 public class UsersService {
@@ -37,6 +36,29 @@ public class UsersService {
 
     // Business logic methods would go here, focusing on User and Login operations...
     // TODO: Register New Employee
+    public Users registerUser(EmployeeDTO request) {
+        // Create new employee
+        Employee employee = new Employee(
+            request.getFirstName().trim(),
+            request.getLastName().trim(),
+            request.getTitle().trim(),
+            request.getDepartment(),
+            request.getEmail().trim(),
+            request.getLocationId()
+        );
+        employeeRepository.save(employee);
+
+        // Create new user
+        String userName = String.format("%s.%s", employee.getFirstName(), employee.getLastName());
+        Users user = userRepository.saveAndFlush(new Users(userName));
+
+        // Create new password
+        String password = String.format("$s123!", employee.getLastName());
+        Login login = new Login(user.getId(), password);
+        loginRepository.save(login);
+
+        return user;
+    }
 
     // TODO: Authenticate User
     public Users authenticateUser(UserDTO passedUser, LoginDTO rawPassword) throws SecurityException {
