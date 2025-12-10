@@ -2,10 +2,10 @@
 import { ref, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import { API_URL } from '../../../config.js';
 
 const router = useRouter();
-
 const handleLogin = inject('handleLogin');
 
 const username = ref('');
@@ -25,7 +25,17 @@ const submitLogin = async (event) => {
     });
     
     const { jwtToken } = response.data;
-    const userData = response.data.user || { username: username.value };
+    
+    // Decode the JWT token to extract user data
+    const decoded = jwtDecode(jwtToken);
+    const userData = {
+      id: decoded.id,
+      first_name: decoded.first_name,
+      last_name: decoded.last_name,
+      location: decoded.location,
+      department: decoded.department,
+      title: decoded.title
+    };
     
     handleLogin(jwtToken, userData);
     router.push('/');
