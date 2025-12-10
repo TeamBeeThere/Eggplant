@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.crypto.SecretKey;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.emerald.exception.DepartmentNotFoundException;
@@ -25,7 +26,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-
+@Component
 public class Tokenizer {
 
     private final EmployeeRepository employeeRepository;
