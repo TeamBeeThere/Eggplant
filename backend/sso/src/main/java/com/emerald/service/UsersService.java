@@ -58,7 +58,8 @@ public class UsersService {
 
         // Create and store new password
         String password = String.format("$s123!", employee.getLastName());
-        Login login = new Login(user.getId(), password);
+        String hashedPassword = passwordEncoder.encode(password);
+        Login login = new Login(user.getId(), hashedPassword);
         loginRepository.save(login);
 
         return user;
@@ -77,8 +78,7 @@ public class UsersService {
             .orElseThrow(() -> new SecurityException("Authentication failed: Missing login record."));
             
         // 3. Verify the password
-        // In a real app: if (passwordEncoder.matches(rawPassword, login.getPasswordHash())) { ... }
-        if (("HASHED_" + rawPassword).equals(login.getPasswordHash())) { // Placeholder comparison
+        if (passwordEncoder.matches(rawPassword.getPassword(), login.getPasswordHash())) {
             return user;
         } else {
             throw new SecurityException("Authentication failed: Invalid credentials.");
