@@ -55,7 +55,7 @@ public class Tokenizer {
 
     public String createToken(Employee employee){
 
-        final String secretString = "RocketSoftwareRocks2025ThisIsNotSecureEnough";
+        final String secretString = "RockertSoftwareRocks2025ThisIsNotSecureEnough";
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretString));
 
         Departments department = departmentRepository.findById(employee.getDepartment())
