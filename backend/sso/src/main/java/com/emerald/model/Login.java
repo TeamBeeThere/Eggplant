@@ -11,14 +11,13 @@ import jakarta.persistence.Table;
 @Table(name = "Login")
 public class Login {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="LoginID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="loginID")
     private int id;
 
-    @Column(name="userID")
     private int userID;
 
-    @Column(name="PasswordHash")
+    @Column(name="passwordHash")
     private String PasswordHash;
 
     public Login() {
