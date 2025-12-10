@@ -1,6 +1,7 @@
 package com.emerald.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emerald.dto.CredentialsDTO;
 import com.emerald.dto.EmployeeDTO;
 import com.emerald.dto.LoginDTO;
 import com.emerald.dto.UserDTO;
@@ -48,13 +50,6 @@ public class SSOController {
 
             
         }
-    
-    @GetMapping("/hello")
-    public ResponseEntity<String> greetings(){
-        return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body("{\"message\": \"Hello\"}");
-    }
 
     @GetMapping("/account/{id}")
     public UserDetailDTO viewAccount(@PathVariable int id){
@@ -75,9 +70,9 @@ public class SSOController {
 
      /* Login Endpoint */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO user, LoginDTO login){
+    public ResponseEntity<String> login(@RequestBody CredentialsDTO credentials){
 
-        usersService.authenticateUser(user, login);
+        usersService.authenticateUser(credentials);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -93,7 +88,7 @@ public class SSOController {
                              .body("{\"message\": \"Account created\"}");
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable int id){
 
         usersService.deleteEmployee(id);
@@ -103,14 +98,22 @@ public class SSOController {
                              .body("{\"message\": \"Account deleted\"}");
     }
 
-    @PutMapping("/changepassword")
-    public ResponseEntity<String> changePassword(@RequestBody UserDTO updatedUser){
+    @PutMapping("/modify/password")
+    public ResponseEntity<String> changePassword(@RequestBody LoginDTO updatedLogin) {
 
-        usersService.updateUserDetails(updatedUser);
+        usersService.updatePassword(updatedLogin);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body("{\"message\": \"Password Changed\"}");
     }
 
+    @PutMapping("/modify/{id}")
+    public ResponseEntity<String> updateDetails(@PathVariable int id, @RequestBody EmployeeDTO updatedEmployee) {
+        employeeService.updateEmployeeInfo(id, updatedEmployee);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body("{\"message\": \"Employee details updated\"}");
+    }
 }
