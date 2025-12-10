@@ -4,6 +4,10 @@ public class DepartmentDTO {
     private int id;
     private String name;
 
+    public DepartmentDTO() {
+        
+    }
+
     public DepartmentDTO(int id, String name) {
         this.id = id;
         this.name = name;

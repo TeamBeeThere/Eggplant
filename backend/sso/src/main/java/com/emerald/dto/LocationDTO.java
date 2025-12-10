@@ -7,6 +7,10 @@ public class LocationDTO {
     private String country;
     private String city;
 
+    public LocationDTO() {
+        
+    }
+
     public LocationDTO(
         int id,
         String phone,

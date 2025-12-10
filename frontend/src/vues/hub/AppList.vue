@@ -10,7 +10,7 @@ let apps = [
   { name: 'BeeThere', image: 'BeeThere.png', color: 'var(--greenlite)', path: defaultPath }, 
   { name: 'SailBoat', image: 'htmlicon.svg', color: 'var(--purplelite)', path: defaultPath },
   { name: 'EggPlant', image: 'htmlicon.svg', color: 'var(--purple)', path: '/eggplant' },
-  { name: '', image: '', color: 'var(--buzzlite)', path: '' },
+  { name: 'SwaB', image: 'swab.png', color: 'var(--blue)', path: defaultPath },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
