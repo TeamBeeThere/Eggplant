@@ -7,6 +7,7 @@ import { API_URL } from '../../../config.js';
 
 const router = useRouter();
 const handleLogin = inject('handleLogin');
+const $cookies = inject('$cookies');
 
 const username = ref('');
 const password = ref('');
@@ -26,7 +27,8 @@ const submitLogin = async (event) => {
     
     const { jwtToken } = response.data;
     
-    // Decode the JWT token to extract user data
+    $cookies.set('eggplant_user_token', jwtToken);
+    
     const decoded = jwtDecode(jwtToken);
     const userData = {
       id: decoded.id,

@@ -1,14 +1,17 @@
 <script setup>
-import { ref, watch, onMounted, provide } from 'vue';
+import { ref, watch, onMounted, provide, inject } from 'vue';
 import { RouterView } from 'vue-router';
 import axios from 'axios';
+import { useCookies } from 'vue-cookies';
 
 import { API_URL, getAuthHeaders } from '../config.js';
 
-const savedUser = localStorage.getItem('user');
-const user = ref(savedUser ? JSON.parse(savedUser) : null);
+const $cookies = inject('$cookies');
 
-const token = ref(localStorage.getItem('token'));
+const savedUser = $cookies.get('user');
+const user = ref(savedUser || null);
+
+const token = ref($cookies.get('token'));
 
 watch([token, user], () => {
   if (token.value && !user.value) {
@@ -21,31 +24,31 @@ watch([token, user], () => {
     .then(response => {
       if (response.data.id) {
         user.value = response.data;
-        localStorage.setItem('user', JSON.stringify(response.data));
+        $cookies.set('user', response.data);
       } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        $cookies.remove('token');
+        $cookies.remove('user');
         token.value = null;
       }
     })
     .catch(() => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      $cookies.remove('token');
+      $cookies.remove('user');
       token.value = null;
     });
   }
 }, { immediate: true });
 
 const handleLogin = (newToken, userData) => {
-  localStorage.setItem('token', newToken);
-  localStorage.setItem('user', JSON.stringify(userData));
+  $cookies.set('token', newToken);
+  $cookies.set('user', userData);
   token.value = newToken;
   user.value = userData;
 };
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  $cookies.remove('token');
+  $cookies.remove('user');
   token.value = null;
   user.value = null;
 };
@@ -54,6 +57,7 @@ provide('user', user);
 provide('token', token);
 provide('handleLogin', handleLogin);
 provide('handleLogout', handleLogout);
+provide('$cookies', $cookies);
 
 </script>
 
