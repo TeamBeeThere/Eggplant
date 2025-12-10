@@ -2,8 +2,8 @@
 import { ref, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { API_URL } from '../../config/api.js';
 
-const API_URL = 'http://localhost:6767/sso';
 const router = useRouter();
 
 const handleLogin = inject('handleLogin');

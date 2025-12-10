@@ -1,15 +1,15 @@
 <script setup>
 import {defineEmits} from 'vue';
 const emit = defineEmits(['updateDisplayUser']);
+import { inject } from 'vue';
 
-let user = {
-  firstName: 'Bill',
-  lastName: 'Murray',
-}; 
+const user = inject('user');
+const token = inject('token');
 
-let displayName = user
-  ? user.firstName.charAt(0).toUpperCase() + user.lastName.charAt(0).toUpperCase()
+const displayName = user.value
+  ? user.value.first_name?.charAt(0).toUpperCase() + user.value.last_name?.charAt(0).toUpperCase()
   : '';
+
 </script>
 
 <template>
