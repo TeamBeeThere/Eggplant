@@ -1,12 +1,16 @@
 package com.emerald.dto;
 
 public class UserDetailDTO {
-        private String userName;
-        private String firstName;
-        private String lastName;
-        private String department;
-        private String title;
-        private String location;
+    private String userName;
+    private String firstName;
+    private String lastName;
+    private String department;
+    private String title;
+    private String location;
+
+    public UserDetailDTO() {
+        
+    }
 
     public UserDetailDTO(
         String userName,

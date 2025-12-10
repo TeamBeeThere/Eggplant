@@ -76,7 +76,7 @@ public class UsersService {
         employeeRepository.save(employee);
 
         // Create and store new password
-        String password = String.format("$s123!", employee.getLastName());
+        String password = String.format("%s123!", employee.getLastName());
         Login login = new Login(user.getId(), password);
         loginRepository.save(login);
 

@@ -10,6 +10,10 @@ public class EmployeeDTO {
     private String email;
     private int locationId;
 
+    public EmployeeDTO() {
+        
+    }
+
     public EmployeeDTO(
         String firstName,
         String lastName, 

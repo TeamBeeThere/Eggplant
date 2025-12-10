@@ -3,6 +3,7 @@ package com.emerald.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +17,12 @@ import com.emerald.dto.EmployeeDTO;
 import com.emerald.dto.LoginDTO;
 import com.emerald.dto.UserDTO;
 import com.emerald.dto.UserDetailDTO;
+import com.emerald.exception.UserNotFoundException;
+import com.emerald.model.Users;
 import com.emerald.service.EmployeeService;
 import com.emerald.service.UsersService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/sso")
 public class SSOController {
@@ -38,11 +42,9 @@ public class SSOController {
                              .body("{\"message\": \"Hello\"}");
     }
 
-    @GetMapping("/viewaccount/{id}")
+    @GetMapping("/account/{id}")
     public UserDetailDTO viewAccount(@PathVariable int id){
-        UserDetailDTO user = usersService.viewUserDetails(id);
-
-        return user;
+        return usersService.viewUserDetails(id);
     }
 
      /* Login Endpoint */
@@ -56,17 +58,16 @@ public class SSOController {
                              .body("{\"message\": \"Login Successful\" , \"jwtToken\": \"%s\"}" /* , token */);
     }
 
-    @PostMapping("/createaccount")
+    @PostMapping("/register")
     public ResponseEntity<String> createAccount(@RequestBody EmployeeDTO newUser){
-
         usersService.registerUser(newUser);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                              .contentType(MediaType.APPLICATION_JSON)
-                             .body("{\"message\": \"Account created.\"}");
+                             .body("{\"message\": \"Account created\"}");
     }
 
-    @DeleteMapping("/deleteaccount")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(@PathVariable int id){
 
         usersService.deleteEmployee(id);
