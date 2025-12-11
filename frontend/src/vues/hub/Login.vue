@@ -5,7 +5,6 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { API_URL } from '../../../config.js';
 
-const router = useRouter();
 const handleLogin = inject('handleLogin');
 const $cookies = inject('$cookies');
 
@@ -27,6 +26,7 @@ const submitLogin = async (event) => {
     
     const  jwtToken  = response.data;
     
+    $cookies.set('eggplant_user_token', jwtToken);
     
     const decoded = jwtDecode(jwtToken);
     const userData = {
@@ -37,10 +37,8 @@ const submitLogin = async (event) => {
       department: decoded.department,
       title: decoded.title
     };
-    $cookies.set('eggplant_user_token', userData);
     
     handleLogin(jwtToken, userData);
-    router.push('/');
     
   } catch (error) {
     errorMessage.value = error.response?.data?.message || 'Login failed. Please try again.';

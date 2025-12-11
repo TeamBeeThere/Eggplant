@@ -27,9 +27,9 @@ let displayUser = ref(false);
 
 <div className="mainContent">
 
-  <Login v-if="!user || !user.value"/>
-      <AppList v-if="user && user.value && !displayUser"/>
-      <Profile v-if="user && user.value && displayUser" @updateDisplayUser="displayUser = $event"/>
+  <Login v-if="!user"/>
+      <AppList v-if="user && !displayUser"/>
+      <Profile v-if="user && displayUser" @updateDisplayUser="displayUser = $event"/>
     </div>
 </div>
 </template>
