@@ -24,7 +24,7 @@ let defaultPath = 'http://localhost:5173/'
 
 let apps = [
   { name: 'BeeThere', image: 'BeeThere.png', color: 'var(--greenlite)', path: defaultPath }, 
-  { name: 'SailBoat', image: 'htmlicon.svg', department: 'sales', color: 'var(--purplelite)', path: defaultPath },
+  { name: 'SaleBoat', image: 'saleBoat.png', department: 'sales', color: 'var(--purplelite)', path: defaultPath },
   { name: 'EggPlant', image: 'htmlicon.svg', department: 'hr', title: 'manager', color: 'var(--purple)', path: '/eggplant' },
   { name: 'SwaB', image: 'swab.png', color: 'var(--blue)', path: defaultPath },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
