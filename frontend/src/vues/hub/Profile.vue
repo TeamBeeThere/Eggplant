@@ -18,8 +18,8 @@ const displayName = user.value
     <div className="profile">
        <div v-if="user" className="displayUser" > {{displayName}}  </div>
        <div className="infoSection">
-         <p> First Name: {{user.firstName}}</p>
-         <p> Last Name: {{user.lastName}}</p>
+         <p> First Name: {{user.first_name}}</p>
+         <p> Last Name: {{user.last_name}}</p>
          <p> Location: {{user.location }}</p>
          <p> Department: {{user.department }}</p>
          <p> Title: {{user.title }}</p>
