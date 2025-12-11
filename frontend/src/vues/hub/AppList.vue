@@ -1,15 +1,29 @@
 <script setup>
+import { inject } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
+const user = inject('user');
 
-// This is the default path for Vue apps running locally which will work fine for the demo 
-// for multiapp release you will want to update the paths, could be to a .env file
+const departmentNames = {
+  1: 'Sales',
+  2: 'Information Technology',
+  3: 'Legal',
+  4: 'Hr'
+};
+
+const titleNames = {
+  1: 'Aide',
+  2: 'Developer',
+  3: 'Sales Agent',
+  4: 'Manager'
+};
+
 let defaultPath = 'http://localhost:5173/'
 
 let apps = [
   { name: 'BeeThere', image: 'BeeThere.png', color: 'var(--greenlite)', path: defaultPath }, 
-  { name: 'SailBoat', image: 'htmlicon.svg', color: 'var(--purplelite)', path: defaultPath },
-  { name: 'EggPlant', image: 'htmlicon.svg', color: 'var(--purple)', path: '/eggplant' },
+  { name: 'SailBoat', image: 'htmlicon.svg', department: 'sales', color: 'var(--purplelite)', path: defaultPath },
+  { name: 'EggPlant', image: 'htmlicon.svg', department: 'hr', title: 'manager', color: 'var(--purple)', path: '/eggplant' },
   { name: 'SwaB', image: 'swab.png', color: 'var(--blue)', path: defaultPath },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
   { name: '', image: '', color: 'var(--buzzlite)', path: '' },
@@ -25,6 +39,38 @@ const navigateToApp = (path) => {
   }
 };
 
+const canAccessApp = (app) => {
+
+  if (!app.department && !app.title) {
+    console.log('App has no restrictions, showing:', app.name);
+    return true;
+  }
+
+  if (!user || !user.value) {
+    console.log('User not logged in, hiding restricted app:', app.name);
+    return false;
+  }
+
+  let userDept = '';
+  let userTitle = '';
+
+  if (typeof user.value.department === 'number') {
+    userDept = (departmentNames[user.value.department] || '').toLowerCase();
+  } else if (typeof user.value.department === 'string') {
+    userDept = user.value.department.toLowerCase();
+  }
+
+  if (typeof user.value.title === 'number') {
+    userTitle = (titleNames[user.value.title] || '').toLowerCase();
+  } else if (typeof user.value.title === 'string') {
+    userTitle = user.value.title.toLowerCase();
+  }
+
+  const deptMatch = !app.department || app.department.toLowerCase() === userDept;
+  const titleMatch = !app.title || app.title.toLowerCase() === userTitle;
+
+  return deptMatch && titleMatch;
+};
 </script>
 
 
@@ -35,9 +81,11 @@ const navigateToApp = (path) => {
       :key="index"
       class="appCard" 
       @click="navigateToApp(app.path)" :style="{ backgroundColor: app.color }"
-    >
+       v-show="canAccessApp(app)"
+      >
      <img v-if="app.image && app.name" :src="`/src/assets/${app.image}`" :alt="app.name" width="100" height="100" />
       <p>{{ app.name }}</p>
+  
     </div>
   </div>
 </template>

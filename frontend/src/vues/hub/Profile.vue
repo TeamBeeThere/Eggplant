@@ -1,15 +1,15 @@
 <script setup>
 import {defineEmits} from 'vue';
 const emit = defineEmits(['updateDisplayUser']);
+import { inject } from 'vue';
 
-let user = {
-  firstName: 'Bill',
-  lastName: 'Murray',
-}; 
+const user = inject('user');
+const token = inject('token');
 
-let displayName = user
-  ? user.firstName.charAt(0).toUpperCase() + user.lastName.charAt(0).toUpperCase()
+const displayName = user.value
+  ? user.value.first_name?.charAt(0).toUpperCase() + user.value.last_name?.charAt(0).toUpperCase()
   : '';
+
 </script>
 
 <template>
@@ -18,8 +18,8 @@ let displayName = user
     <div className="profile">
        <div v-if="user" className="displayUser" > {{displayName}}  </div>
        <div className="infoSection">
-         <p> First Name: {{user.firstName}}</p>
-         <p> Last Name: {{user.lastName}}</p>
+         <p> First Name: {{user.first_name}}</p>
+         <p> Last Name: {{user.last_name}}</p>
          <p> Location: {{user.location }}</p>
          <p> Department: {{user.department }}</p>
          <p> Title: {{user.title }}</p>
