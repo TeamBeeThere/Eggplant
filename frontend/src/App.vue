@@ -1,64 +1,50 @@
 <script setup>
-import { ref, watch, onMounted, provide, inject } from 'vue';
+import { ref, provide, inject, onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import axios from 'axios';
-import { useCookies } from 'vue-cookies';
-
 import { API_URL, getAuthHeaders } from '../config.js';
 
+const user = ref(null);
+const token = ref(null);
 const $cookies = inject('$cookies');
 
-const savedUser = $cookies.get('user');
-const user = ref(savedUser || null);
-
-const token = ref($cookies.get('token'));
-
-watch([token, user], () => {
-  if (token.value && !user.value) {
-    // token verification
-    axios.get(`${API_URL}/user`, {
-      headers: {
-        'Authorization': `Bearer ${token.value}`
-      }
-    })
-    .then(response => {
-      if (response.data.id) {
-        user.value = response.data;
-        $cookies.set('user', response.data);
-      } else {
-        $cookies.remove('token');
-        $cookies.remove('user');
-        token.value = null;
-      }
-    })
-    .catch(() => {
-      $cookies.remove('token');
-      $cookies.remove('user');
-      token.value = null;
-    });
-  }
-}, { immediate: true });
-
-const handleLogin = (newToken, userData) => {
-  $cookies.set('token', newToken);
-  $cookies.set('user', userData);
-  token.value = newToken;
+const handleLogin = (jwtToken, userData) => {
+  token.value = jwtToken;
   user.value = userData;
+  
+  if ($cookies) {
+    $cookies.set('eggplant_user_token', jwtToken);
+  }
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
 };
 
 const handleLogout = () => {
-  $cookies.remove('token');
-  $cookies.remove('user');
-  token.value = null;
   user.value = null;
+  token.value = null;
+  
+  if ($cookies) {
+    $cookies.remove('eggplant_user_token');
+  }
+  
+  delete axios.defaults.headers.common['Authorization'];
 };
+
+onMounted(() => {
+
+  if ($cookies) {
+    const savedToken = $cookies.get('eggplant_user_token');
+    if (savedToken) {
+      token.value = savedToken;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+    }
+  }
+});
 
 provide('user', user);
 provide('token', token);
 provide('handleLogin', handleLogin);
 provide('handleLogout', handleLogout);
-provide('$cookies', $cookies);
-
 </script>
 
 <template>

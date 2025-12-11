@@ -9,7 +9,7 @@ const router = useRouter();
 const handleLogin = inject('handleLogin');
 const $cookies = inject('$cookies');
 
-const username = ref('');
+const userName = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const isLoading = ref(false);
@@ -21,13 +21,12 @@ const submitLogin = async (event) => {
   
   try {
     const response = await axios.post(`${API_URL}/login`, {
-      username: username.value,
+      userName: userName.value,
       password: password.value
     });
     
-    const { jwtToken } = response.data;
+    const  jwtToken  = response.data;
     
-    $cookies.set('eggplant_user_token', jwtToken);
     
     const decoded = jwtDecode(jwtToken);
     const userData = {
@@ -38,6 +37,7 @@ const submitLogin = async (event) => {
       department: decoded.department,
       title: decoded.title
     };
+    $cookies.set('eggplant_user_token', userData);
     
     handleLogin(jwtToken, userData);
     router.push('/');
@@ -56,7 +56,7 @@ const submitLogin = async (event) => {
       <label>Username</label>
       <input 
         type="text" 
-        v-model="username" 
+        v-model="userName" 
         placeholder="Username" 
         required 
       /><br/><br/>
