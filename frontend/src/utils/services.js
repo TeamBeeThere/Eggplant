@@ -56,8 +56,8 @@ export const delAccount = async (employeeData) => {
 
 export const loginUser = async (employeeData) => {
   try {
-    const response = await axios.delete(`${API_URL}/login`, employeeData, {
-      headers: { token: TOKEN } 
+    const response = await axios.post(`${API_URL}/login`, employeeData, {
+         headers: getAuthHeaders()
     });
     return response.data;
   } catch (error) {
