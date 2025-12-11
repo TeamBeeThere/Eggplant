@@ -1,8 +1,10 @@
 <script setup>
 import { inject } from 'vue';
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
 const user = inject('user');
+const token = inject('token');
 
 const departmentNames = {
   1: 'Sales',
@@ -32,7 +34,12 @@ let apps = [
 ];
 
 const navigateToApp = (path) => {
- if (path.startsWith('http')) {
+  let finalPath = path;
+  
+  if (path.startsWith('http') && token && token.value) {
+    finalPath = `${path}?token=${encodeURIComponent(token.value)}`;
+    window.location.href = finalPath;
+  } else if (path.startsWith('http')) {
     window.location.href = path;
   } else {
     router.push(path);
