@@ -1,60 +1,50 @@
 <script setup>
-import { ref, watch, onMounted, provide } from 'vue';
+import { ref, provide, inject, onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import axios from 'axios';
+import { API_URL, getAuthHeaders } from '../config.js';
 
-const API_URL = 'http://localhost:6767/sso';
+const user = ref(null);
+const token = ref(null);
+const $cookies = inject('$cookies');
 
-const savedUser = localStorage.getItem('user');
-const user = ref(savedUser ? JSON.parse(savedUser) : null);
-
-const token = ref(localStorage.getItem('token'));
-
-watch([token, user], () => {
-  if (token.value && !user.value) {
-    // token verification
-    axios.get(`${API_URL}/user`, {
-      headers: {
-        'Authorization': `Bearer ${token.value}`
-      }
-    })
-    .then(response => {
-      if (response.data.id) {
-        user.value = response.data;
-        localStorage.setItem('user', JSON.stringify(response.data));
-      } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        token.value = null;
-      }
-    })
-    .catch(() => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      token.value = null;
-    });
-  }
-}, { immediate: true });
-
-const handleLogin = (newToken, userData) => {
-  localStorage.setItem('token', newToken);
-  localStorage.setItem('user', JSON.stringify(userData));
-  token.value = newToken;
+const handleLogin = (jwtToken, userData) => {
+  token.value = jwtToken;
   user.value = userData;
+  
+  if ($cookies) {
+    $cookies.set('eggplant_user_token', jwtToken);
+  }
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
 };
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  token.value = null;
   user.value = null;
+  token.value = null;
+  
+  if ($cookies) {
+    $cookies.remove('eggplant_user_token');
+  }
+  
+  delete axios.defaults.headers.common['Authorization'];
 };
+
+onMounted(() => {
+
+  if ($cookies) {
+    const savedToken = $cookies.get('eggplant_user_token');
+    if (savedToken) {
+      token.value = savedToken;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+    }
+  }
+});
 
 provide('user', user);
 provide('token', token);
 provide('handleLogin', handleLogin);
 provide('handleLogout', handleLogout);
-
 </script>
 
 <template>

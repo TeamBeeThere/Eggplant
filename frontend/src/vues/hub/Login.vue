@@ -2,13 +2,13 @@
 import { ref, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-
-const API_URL = 'http://localhost:6767/sso';
-const router = useRouter();
+import { jwtDecode } from 'jwt-decode';
+import { API_URL } from '../../../config.js';
 
 const handleLogin = inject('handleLogin');
+const $cookies = inject('$cookies');
 
-const username = ref('');
+const userName = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const isLoading = ref(false);
@@ -20,15 +20,25 @@ const submitLogin = async (event) => {
   
   try {
     const response = await axios.post(`${API_URL}/login`, {
-      username: username.value,
+      userName: userName.value,
       password: password.value
     });
     
-    const { jwtToken } = response.data;
-    const userData = response.data.user || { username: username.value };
+    const  jwtToken  = response.data;
+    
+    $cookies.set('eggplant_user_token', jwtToken);
+    
+    const decoded = jwtDecode(jwtToken);
+    const userData = {
+      id: decoded.id,
+      first_name: decoded.first_name,
+      last_name: decoded.last_name,
+      location: decoded.location,
+      department: decoded.department,
+      title: decoded.title
+    };
     
     handleLogin(jwtToken, userData);
-    router.push('/');
     
   } catch (error) {
     errorMessage.value = error.response?.data?.message || 'Login failed. Please try again.';
@@ -44,7 +54,7 @@ const submitLogin = async (event) => {
       <label>Username</label>
       <input 
         type="text" 
-        v-model="username" 
+        v-model="userName" 
         placeholder="Username" 
         required 
       /><br/><br/>
